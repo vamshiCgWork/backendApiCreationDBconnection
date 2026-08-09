@@ -6,8 +6,6 @@ const notes =[]
 
 app.post("/createNotes",(req,res)=>{
     const note = req.body
-    console.log("9999 req",req.body)
-    console.log("9999",note)
     notes.push(note)
     res.status(201).json({
         message:"notes created",
@@ -16,7 +14,6 @@ app.post("/createNotes",(req,res)=>{
 })
 
 app.get("/allNotes",(req,res)=>{
-    console.log("all notes:",notes)
     res.status(200 ).json({
         message:"fetched all notes",
         notes:notes
@@ -31,5 +28,16 @@ res.status(200).json({
 })
 })
 
+app.patch("/notes/:index", (req,res)=>{
+    const index = req.params.index
+    const content = req.body.content
+
+    notes[index].content = content
+
+    res.status(201).json({
+        message:"upated",
+        note:notes[index]
+    })
+})
 
 export default app
