@@ -1,13 +1,12 @@
 import express from "express";
-import { createPost,getAllPosts } from "../controllers/post.controllers.js";
+import multer from "multer";
+import postController from "../controllers/post.controllers.js";
 
-
-
-
+const upload = multer({storage:multer.memoryStorage()})
 
 const router = express.Router()
 
-router.post("/create-post",createPost)
-router.get("/posts",getAllPosts)
+router.post("/create-post",upload.single("image"),postController.createPost)
+router.get("/posts",postController.getAllPosts)
 
 export default router
