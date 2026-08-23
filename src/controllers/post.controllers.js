@@ -4,19 +4,23 @@ import Post from "./../models/post.model.js"
 
 
  async function createPost(req,res){
-    try {
+  try {
+    const { description, likes, isLiked } = req.body;
+    const fileName = req.file.originalname;
+    const bufferBase64String = req.file.buffer.toString("base64");
+    const result = await uploadImage(fileName, bufferBase64String);
+    const imageLink = result.url;
+    const post = await Post.create({
+      image: imageLink,
+      description,
+      likes: likes !== undefined ? Number(likes) : 0,
+      isLiked: isLiked !== undefined ? String(isLiked) === "true" || Boolean(isLiked) : false,
+    });
 
-        const {description} = req.body
-        const fileName = req.file.originalname
-        const bufferBase64String = req.file.buffer.toString('base64')
-        const result = await uploadImage(fileName,bufferBase64String)
-        const imageLink = result.url
-        const post = await Post.create({image:imageLink,description})
-
-        res.status(201).json({
-            message:"created post",
-            data:post
-        })
+    res.status(201).json({
+      message: "created post",
+      data: post,
+    });
     } catch (error) {
         res.status(500).json({
             message:error.message
